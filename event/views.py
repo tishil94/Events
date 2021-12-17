@@ -5,6 +5,7 @@ from datetime import datetime
 from django.db.models import Q
 from django.http.response import JsonResponse
 import json
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 # Create your views here.
@@ -43,8 +44,16 @@ def index(request):
         for event in events:
             if event.id in disliked_event_ids:
                 event.disliked = True
+    page = request.GET.get('page', 1)
+    paginator = Paginator(events, 10)
 
-    return render(request, 'events.html', {'events': events, 'category': filter_cat})
+    try:
+        eventlist = paginator.page(page)
+    except PageNotAnInteger:
+        eventlist = paginator.page(1)
+    except EmptyPage:
+        eventlist = paginator.page(paginator.num_pages)
+    return render(request, 'events.html', {'events': eventlist, 'category': filter_cat})
 
 
 def like_event(request):
