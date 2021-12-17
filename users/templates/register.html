@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sign Up</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Event Login Form template Responsive, Login form web template,Flat Pricing tables,Flat Drop downs  Sign up Web Templates, Flat Web Templates, Login sign up Responsive web template, SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- Custom Theme files -->
+<link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" media="all" />
+<!-- //Custom Theme files -->
+<!-- web font -->  
+<link href= "//fonts.googleapis.com/css?family=Ubuntu:300,300i,400,400i,500,500i,700,700i&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext" rel="stylesheet">
+<!-- //web font --><style>
+	input[type="email"] {
+    outline: none;
+    font-size: 1em;
+    color: #fff;
+    padding: .6em 1em;
+    margin: 0;
+    width: 91%;
+    border: none;
+    border-bottom-color: currentcolor;
+    border-bottom-style: none;
+    border-bottom-width: medium;
+    border-bottom: 1px solid rgb(255, 255, 255);
+    -webkit-appearance: none;
+    display: block;
+    background: transparent;
+}
+</style>
+</head>
+<body>
+	<!-- main -->
+	<div class="main">
+		<h1>Sign Up Form</h1>
+		<div class="main-w3lsrow">
+			<!-- login form -->
+			<div class="login-form login-form-left"> 
+				<div class="agile-row">
+					<h2>Sign Up Form</h2>
+					<div class="">
+						{% for message in messages %}
+						<p class="anim" style="color: red;">{{message}}<p>
+						{% endfor %}
+						
+					</div> 
+					<div class="login-agileits-top">
+						<form action="{% url 'register' %}" method="post">{% csrf_token %}
+							<p> Name </p>
+							<input type="text" class="name" name="name" required=""/>
+							<p>User Name </p>
+							<input type="text" class="name" name="username" required=""/>
+							<p>Password</p>
+							<input type="password" class="password" name="password" required=""/>
+							<p>Email </p>
+							<input type="email" class="name" name="email" required=""/>
+
+							<label class="anim">
+
+<!--								<input type="checkbox" class="checkbox">-->
+							</label>   
+							<input type="submit" value="Sign Up">
+						</form> 
+					</div> 
+					<div class="">
+						<p class="anim">already have an account?</p>
+					</div> 
+					<div class="login-agileits-bottom">
+						<a class="anim" href="{% url 'login' %}">LOGIN</a>
+						
+					</div> 
+				</div>  
+			</div>  
+		</div>	
+		<!-- copyright -->
+
+		<!-- //copyright --> 
+	</div>	
+	<!-- //main --> 
+</body>
+</html>

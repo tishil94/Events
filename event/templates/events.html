@@ -1,0 +1,353 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Events</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="{% static 'css/swiper.min.css' %}">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        select
+        {
+            width: 100%;
+            padding: 12px 24px;
+            margin: 0 6px 30px;
+            border: 1px solid #e5e5e5;
+            font-size: 16px;
+            outline: none;
+            background: #f3f8f9;
+            color: #232127;
+        }
+    </style>
+
+</head>
+<body class="events-list-page">
+
+<header class="site-header">
+    <div class="header-bar">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-10 col-lg-2 order-lg-1">
+                    <div class="site-branding">
+                        <div class="site-title">
+                            <a href="#"><img src="{% static 'images/logo.png' %}" alt="logo"></a>
+                        </div><!-- .site-title -->
+                    </div><!-- .site-branding -->
+                </div><!-- .col -->
+
+                <div class="col-lg-3 d-none d-lg-block order-2 order-lg-3">
+                    <div class="buy-tickets">
+                        {% if user.is_authenticated %}
+                        <a class="btn gradient-bg" href="{% url 'logout' %}"  >Logout</a>
+                        {% else %}
+                        <a class="btn gradient-bg" href="{% url 'login' %}"  >Sign In</a>
+                        <a class="btn gradient-bg" href="{% url 'register' %}"  >Sign Up</a>
+
+                        {% endif %}
+
+                    </div>
+                </div>
+
+                <div class="col-2 col-lg-7 order-3 order-lg-2">
+                    <nav class="site-navigation">
+                        <div class="hamburger-menu d-lg-none">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div><!-- .hamburger-menu -->
+
+                        
+
+
+                    </nav><!-- .site-navigation -->
+                </div><!-- .col -->
+
+                
+            </div><!-- .row -->
+        </div><!-- .container-fluid -->
+    </div><!-- .header-bar -->
+
+    <div class="page-header events-page-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</header><!-- .site-header -->
+
+<div class="upcoming-events-outer">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <form class="events-search" action="{% url 'index' %}" method="post" >{% csrf_token %}
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 col-md-3">
+                                <input name="start_date" type="text" placeholder="Start Date" onfocus="(this.type='date')" >
+                            </div>
+
+                            <div class="col-12 col-md-3">
+                                <input name="end_date" type="text" placeholder="End Date" onfocus="(this.type='date')">
+                            </div>
+
+                            <div class="col-12 col-md-2">
+<!--                                <input name="category" type="text" placeholder="Category">-->
+                                <select>
+                                    {% for item in category %}
+                                    <option>{{item.categories}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-12 col-md-2">
+                                <input name="keyword" type="text" placeholder="Search">
+                            </div>
+
+                            <div class="col-12 col-md-2">
+                                <input class="btn gradient-bg" type="submit" value="Search Events">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="upcoming-events" id="here">
+                    <div class="upcoming-events-header">
+                        <h4>Upcoming Events</h4>
+                    </div>
+
+                    <div class="upcoming-events-list">
+                        {% for event in events %}
+                        <div class="upcoming-event-wrap flex flex-wrap justify-content-between align-items-center">
+                            <figure class="events-thumbnail">
+                                <a href="#"><img src="{{event.image.url}}" alt=""></a>
+                            </figure>
+
+                            <div class="entry-meta">
+                                <div class="event-date">
+                                    <span>{{event.start_date.date}}</span>
+                                </div>
+                            </div>
+                            <div class="entry-meta">
+                                <div class="event-date">
+                                    <span>{{event.location}}</span>
+                                </div>
+                            </div>
+
+                            <header class="entry-header">
+                                <h3 class="entry-title"><a href="#">{{event.title}}</a></h3>
+
+                                <div class="event-date-time">{{event.start_date}} - {{event.end_date}}</div>
+
+                                <div class="event-speaker">{{event.description}}</div>
+<!--                                <div id="id"  class="event-speaker">{{event.liked}}</div>-->
+                            </header>
+                            <footer class="like-button-footer">
+                                 {% if user.is_authenticated %}
+                                    {% if event.liked %}
+                                    <button
+                                            class="active-like-button like-button like-active {{event.id}}"
+                                            rel="{{event.id}}"  >
+                                        <i class="fa fa-thumbs-up"></i></button>
+                                    {% else %}
+                                         <button
+                                            class="active-like-button like-button {{event.id}}"
+                                            rel="{{event.id}}"  >
+                                        <i class="fa fa-thumbs-up"></i></button>
+                                    {% endif %}
+
+                                 {% else %}
+                                    <button class="like-button alert-button " rel="{{event.id}}"  ><i class="fa fa-thumbs-up"></i></button>
+                                 {% endif %}
+
+
+                            </footer>
+
+                            <footer class="entry-footer">
+                                {% if user.is_authenticated %}
+                                    {% if event.disliked %}
+                                    <button class="like-button active-dislike-button dislike-active {{event.id}}" rel="{{event.id}}"  ><i class="fa fa-thumbs-down"></i></button>
+                                    {% else %}
+                                    <button class="like-button active-dislike-button {{event.id}}" rel="{{event.id}}"  ><i class="fa fa-thumbs-down"></i></button>
+                                    {% endif %}
+
+                                 {% else %}
+                                 <button class="like-button alert-button " rel="{{event.id}}"  ><i class="fa fa-thumbs-down"></i></button>
+                                 {% endif %}
+                            </footer>
+
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <figure class="footer-logo">
+                    <a href="#"><img src='{% static "images/logo.png" %}' alt="logo"></a>
+                </figure>
+
+                <div class="footer-social">
+                    <ul class="flex flex-wrap justify-content-center align-items-center">
+                        <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+                        <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                        <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Modal-- -->
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+<script type='text/javascript' src="{% static 'js/jquery.js' %}"></script> 
+<script type='text/javascript' src="{% static 'js/masonry.pkgd.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/jquery.collapsible.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/swiper.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/jquery.countdown.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/circle-progress.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/jquery.countTo.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/custom.js' %}"></script>
+
+<script type='text/javascript' >
+ function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+$(document).ready(function()
+      {
+        $('.active-like-button').click(function()
+		   		{   
+                    $(this).toggleClass('like-active');
+		   			var id=$(this).attr('rel');
+
+                    $('.'+id).removeClass('dislike-active');
+		   		
+                       data = {
+                           'id':id
+                       }
+
+		   			var datastring = JSON.stringify(data);
+		   			    $.ajax({
+    	   				url:'/like_event/',
+    	   				dataType:"json",
+		   				method:'POST',
+		   				headers:{
+                            'X-CSRFToken':csrftoken,
+
+                        },
+
+		   				data:{"datastring":datastring},
+		   				success: function(response)
+                            {
+
+                            }
+		   			})
+
+
+		})
+
+
+        $('.active-dislike-button').click(function()
+		   		{   
+                    $(this).toggleClass('dislike-active');
+		   			var id=$(this).attr('rel');
+                    $('.'+id).removeClass('like-active');
+		   		
+                       data = {
+                           'id':id
+                       }
+
+		   			var datastring = JSON.stringify(data);
+		   			    $.ajax({
+    	   				url:'/dislike_event/',
+    	   				dataType:"json",
+		   				method:'POST',
+		   				headers:{
+                            'X-CSRFToken':csrftoken,
+
+                        },
+
+		   				data:{"datastring":datastring},
+		   				success: function(response)
+                            {
+ 
+                            }
+		   			})
+
+
+		})
+        $('.alert-button').click(function()
+		   		{ 
+                    alert("Please Login to Continue !")
+                   })
+                
+      });
+
+</script>
+
+</body>
+</html>

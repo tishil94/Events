@@ -1,0 +1,16 @@
+*.pyc
+*.swp
+.coverage
+.idea
+.DS_Store
+/venv/
+~$*.xlsx
+*.egg-info/
+.tox
+/.project
+/.settings
+/.pydevproject
+services_shared
+MANIFEST
+trigger-jenkins-job
+.env
