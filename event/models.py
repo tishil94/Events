@@ -18,22 +18,18 @@ class Event(models.Model):
     categories = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
     published = models.BooleanField(default=False)
     paid = models.BooleanField(default=False)
+    likes = models.ManyToManyField(User, blank=True, related_name="likes")
+    dislikes = models.ManyToManyField(User, blank=True, related_name="dislikes")
+
+
 
     def __str__(self):
         return self.title
     
     def clean(self):
-        if self.end_date <= timezone.now() or self.start_date >= self.end_date:
+        if self.start_date >= self.end_date:
             raise ValidationError("Enter Proper dates")
 
 
-class UserEvent(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    like = models.BooleanField(default=False)
-    dislike = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.user
 
 
