@@ -100,15 +100,7 @@ def dislike_event(request):
             event.dislikes.add(request.user.id)
             event.likes.remove(request.user.id)
 
-        if not UserEvent.objects.filter(user_id=request.user.id, event_id=event_id).exists():
-            event = UserEvent.objects.create(user_id=request.user.id, event_id=event_id, dislike=True)
-        else:
-            event = UserEvent.objects.get(user_id=request.user.id, event_id=event_id)
-            if not event.dislike:
-                event.like = False
-                event.dislike = True
-            else:
-                event.dislike = False
+
         event.save()
 
         return JsonResponse({"status": "succes", "message": "event disliked"})
